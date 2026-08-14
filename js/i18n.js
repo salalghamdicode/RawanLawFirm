@@ -132,7 +132,7 @@ window.I18N = {
     /* --- Footer --------------------------------------------------------- */
     'ft.phone': '+966 548 548 270',
     'ft.email': 'rawan@rsalawfirm.co',
-    'ft.address': 'الرياض، حي العليا، طريق الملك فهد، أبراج القادة',
+    'ft.address': 'السعودية، الرياض، طريق الامير محمد بن عبدالعزيز، العليا',
     'ft.license': 'ترخيص المحاماة رقم 113/41 — أعمال وخدمات التوثيق / ترخيص وزارة العدل رقم 1913/41',
     'ft.rights': 'جميع الحقوق محفوظة © {year} مكتب روان صالح عبدالله الغامدي للمحاماة'
   },
@@ -261,7 +261,7 @@ window.I18N = {
     /* --- Footer --------------------------------------------------------- */
     'ft.phone': '+966 548 548 270',
     'ft.email': 'rawan@rsalawfirm.co',
-    'ft.address': 'Al Qadah Towers, King Fahd Road, Al Olaya, Riyadh, Saudi Arabia',
+    'ft.address': 'Al Olaya, Prince Mohammed bin Abdulaziz Road, Riyadh, Saudi Arabia',
     'ft.license': 'Lawyer License No. 113/41 — Notary Public Services / M.O.J. License No. 1913/41',
     'ft.rights': '© {year} Rawan Saleh A. Alghamdi Law Firm. All rights reserved.'
   }
