@@ -304,6 +304,35 @@ html[dir="rtl"] .input--ltr { text-align: right; }
 }
 .affix > .tag--end { border-inline-end: 0; border-inline-start: 1px solid var(--border); }
 
+/* The dialling-code tag is a real <select>. It keeps the flat tag look while
+   staying operable: the closed control is narrow enough to show the flag and
+   the code and then clip, so a long country name can never push the number
+   field out of the row, and the clip lands in open space rather than halfway
+   through a word. The open list is sized by the browser and still shows every
+   label in full, which is what makes the list scannable.
+
+   The closed control shows a short "flag +code" label that app.js swaps in,
+   so this width only has to fit the longest dialling code (+998) and the
+   ellipsis below is a safety net rather than the normal case. */
+.affix > .tag--select {
+  appearance: none;
+  -webkit-appearance: none;
+  direction: ltr;
+  inline-size: 5.9rem;
+  flex: none;
+  padding-inline: .7rem 1.5rem;
+  border-radius: 0;
+  text-overflow: ellipsis;
+  cursor: pointer;
+  /* Chevron, drawn inline so no network request is involved. */
+  background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236B6A7B' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right .5rem center;
+  background-size: .85rem;
+}
+.affix > .tag--select:focus-visible { outline: 2px solid var(--gold); outline-offset: -2px; }
+.affix > .tag--select option { direction: ltr; text-align: left; }
+
 /* --- Choice controls ------------------------------------------------------ */
 .choices { display: flex; flex-direction: column; gap: var(--sp-3); margin-block-start: var(--sp-1); }
 .q-block { border: 0; padding: 0; margin: 0; }
