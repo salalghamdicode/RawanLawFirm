@@ -51,6 +51,40 @@ window.V = (function () {
      check applies: 7–15 digits, the E.164 range. */
   const intlMobile = v => /^\d{7,15}$/.test(digitsOnly(v));
 
+  /* --- International numbers, by dialling code --------------------------
+     The country code now comes from its own select, so this field holds the
+     national number alone. A client may still paste a fully qualified number
+     out of a contacts app, so an explicitly dialled prefix — a leading "+"
+     or "00" followed by the selected code — is stripped back off. Only an
+     explicit prefix is trusted: plenty of national numbers legitimately open
+     with the same digits as their own country code, and quietly eating those
+     would corrupt the number.
+
+     A single leading zero is the national trunk prefix (07… in the UK, 05…
+     in Saudi Arabia). It is never dialled from abroad, so it goes too. */
+  function nationalNumber(v, dialCode) {
+    const code = digitsOnly(dialCode);
+    let s = toLatinDigits(v).replace(/[^\d+]/g, '');
+
+    if (s.startsWith('+') || s.startsWith('00')) {
+      s = s.startsWith('+') ? s.slice(1) : s.slice(2);
+      if (s.startsWith(code)) s = s.slice(code.length);
+    }
+    return s.replace(/^0+/, '');
+  }
+
+  /* ITU-T E.164 caps a full number at 15 digits including the country code;
+     no national number anywhere is shorter than four. */
+  function intlNational(v, dialCode) {
+    const n = nationalNumber(v, dialCode);
+    const code = digitsOnly(dialCode);
+    return /^\d+$/.test(n) && n.length >= 4 && code.length + n.length <= 15;
+  }
+
+  /* The stored form: +<country code><national number>, no spaces. */
+  const toE164 = (v, dialCode) =>
+    '+' + digitsOnly(dialCode) + nationalNumber(v, dialCode);
+
   /* --- Money ------------------------------------------------------------ */
   function parseAmount(v) {
     const s = toLatinDigits(v)
@@ -111,6 +145,7 @@ window.V = (function () {
     nationalId, iqama, idNumber,
     fullName, email,
     normalizeSaudiMobile, saudiMobile, intlMobile,
+    nationalNumber, intlNational, toE164,
     parseAmount, amount, formatAmount,
     cleanIban, iban, ibanChecksum, ibanStructure, formatIban,
     IBAN_LENGTH

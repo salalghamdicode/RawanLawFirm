@@ -77,18 +77,97 @@
     if (input.value.trim()) validateField(input);
   }
 
-  /* A non-Saudi client may hold a foreign mobile number, so the +966 tag
-     is dropped and the looser international rule applies. */
-  function syncPhoneField() {
-    const saudi = isSaudi();
-    const tag = $('#phone-cc');
-    const hint = $('#phone-hint');
+  /* ======================================================================
+     Dialling code
+     ====================================================================== */
+  /* The flag is derived from the ISO code itself — each letter maps to its
+     regional indicator symbol — so no flag data ships with the page. A
+     platform without flag glyphs falls back to drawing the two letters,
+     which is a perfectly good label. */
+  const flag = iso => String.fromCodePoint(
+    ...[...iso].map(ch => 0x1F1E6 + ch.charCodeAt(0) - 65));
 
-    tag.hidden = !saudi;
-    tag.style.display = saudi ? '' : 'none';
-    hint.textContent = t(saudi ? 'f.phone.hint' : 'f.phone.hint.intl');
-    hint.setAttribute('data-i18n', saudi ? 'f.phone.hint' : 'f.phone.hint.intl');
-    $('#phone').placeholder = saudi ? t('f.phone.ph') : '+__ ___ ___ ____';
+  const dialCountry = () => {
+    const v = $('#phone-cc').value;
+    return v && v !== DIVIDER ? v : 'SA';
+  };
+  const dialCode = () => window.DIAL_CODES[dialCountry()] || '966';
+
+  function buildDialOptions() {
+    const select = $('#phone-cc');
+    const previous = select.value;
+    const idx = lang === 'en' ? 1 : 2;
+
+    const collator = new Intl.Collator(lang === 'en' ? 'en' : 'ar', { sensitivity: 'base' });
+    const rest = window.COUNTRIES
+      .filter(c => c[0] !== 'SA')
+      .sort((a, b) => collator.compare(a[idx], b[idx]));
+
+    const saudi = window.COUNTRIES.find(c => c[0] === 'SA');
+
+    /* The code is what the client is picking, so it leads the label; the
+       country name follows to make the list readable and type-searchable.
+       The full label is kept in data-full — see collapseCodeLabel. */
+    const opt = c => {
+      const label = `${flag(c[0])} +${window.DIAL_CODES[c[0]]} ${c[idx]}`;
+      return `<option value="${c[0]}" data-full="${label}">${label}</option>`;
+    };
+
+    select.innerHTML =
+      opt(saudi) +
+      `<option value="${DIVIDER}" disabled>──────────</option>` +
+      rest.map(opt).join('');
+
+    select.value = previous && previous !== DIVIDER ? previous : 'SA';
+    collapseCodeLabel();
+  }
+
+  /* A native select can only ever show the selected option's own text when
+     closed, and "🇸🇦 +966 المملكة العربية السعودية" does not fit the tag. Any
+     clip lands mid-word — and under bidi an Arabic name clipped inside an LTR
+     control shows its tail, which reads as mojibake rather than as a name.
+
+     So the selected option holds a short flag-and-code label while the control
+     is closed, and every label is restored the moment the client is about to
+     read the list. Restoring on focus covers the keyboard and the iOS wheel
+     alike, both of which focus the control before opening it. */
+  const codeOptions = () => Array.prototype.slice.call($('#phone-cc').options);
+
+  function expandCodeLabels() {
+    codeOptions().forEach(o => { if (o.dataset.full) o.text = o.dataset.full; });
+  }
+
+  function collapseCodeLabel() {
+    expandCodeLabels();
+    const o = $('#phone-cc').options[$('#phone-cc').selectedIndex];
+    if (o && o.value !== DIVIDER) {
+      o.text = flag(o.value) + ' +' + window.DIAL_CODES[o.value];
+    }
+  }
+
+  /* The dialling code follows nationality — a Saudi client gets +966, an
+     Egyptian one +20 — but only as a starting point. Residency and phone
+     origin often diverge, so the client is free to override it afterwards,
+     and picking a nationality again is what resets it. */
+  function syncPhoneField() {
+    const nationality = $('#nationality').value;
+    if (nationality && nationality !== DIVIDER && window.DIAL_CODES[nationality]) {
+      $('#phone-cc').value = nationality;
+      collapseCodeLabel();
+    }
+    syncPhoneRule();
+  }
+
+  /* Hint, placeholder and validation all key off the chosen dialling code
+     rather than nationality, so they stay truthful after an override. */
+  function syncPhoneRule() {
+    const saudi = dialCountry() === 'SA';
+    const hint = $('#phone-hint');
+    const key = saudi ? 'f.phone.hint' : 'f.phone.hint.intl';
+
+    hint.textContent = t(key);
+    hint.setAttribute('data-i18n', key);
+    $('#phone').placeholder = saudi ? t('f.phone.ph') : t('f.phone.ph.intl');
 
     if ($('#phone').value.trim()) validateField($('#phone'));
   }
@@ -119,8 +198,12 @@
       b.setAttribute('aria-pressed', String(b.dataset.lang === lang)));
 
     buildCountryOptions();
+    buildDialOptions();
     syncIdentityField();
-    syncPhoneField();
+    /* A language switch relabels the dialling codes but must not undo a
+       manual choice among them, so the rule is refreshed without deriving
+       the code from nationality again. */
+    syncPhoneRule();
 
     /* Re-render every validation message currently on screen. */
     $$('.error-msg[data-err-key]').forEach(el => { el.textContent = t(el.dataset.errKey); });
@@ -142,10 +225,12 @@
       return V.idNumber(v, isSaudi()) ? null : (isSaudi() ? 'e.id.sa' : 'e.id.other');
     },
     address: v => (!v.trim() ? 'e.required' : null),
+    /* Keyed off the dialling code, not nationality: +966 gets the strict
+       Saudi mobile rule, everything else the E.164 length check. */
     phone: v => {
       if (!v.trim()) return 'e.required';
-      if (isSaudi()) return V.saudiMobile(v) ? null : 'e.phone';
-      return V.intlMobile(v) ? null : 'e.phone.intl';
+      if (dialCountry() === 'SA') return V.saudiMobile(v) ? null : 'e.phone';
+      return V.intlNational(v, dialCode()) ? null : 'e.phone.intl';
     },
     email: v => (!v.trim() ? 'e.required' : !V.email(v) ? 'e.email' : null),
 
@@ -285,9 +370,9 @@
       idNumber: V.digitsOnly($('#idNumber').value),
       address: $('#address').value.trim(),
       /* Stored in full international form so the firm can dial it directly. */
-      phone: saudi
+      phone: dialCountry() === 'SA'
         ? '+966' + V.normalizeSaudiMobile($('#phone').value)
-        : V.trim($('#phone').value),
+        : V.toE164($('#phone').value, dialCode()),
       email: $('#email').value.trim(),
 
       employerName: $('#employerName').value.trim(),
@@ -488,8 +573,10 @@
      ====================================================================== */
   /* The footer address ships with a Google Maps href so it works without JS.
      On Apple platforms, point it at Apple Maps instead — that URL opens the
-     native Maps app on iOS/macOS and a web map everywhere else. */
-  const MAP_QUERY = 'طريق الامير محمد بن عبدالعزيز، العليا، الرياض، السعودية';
+     native Maps app on iOS/macOS and a web map everywhere else. Both drop the
+     pin on the office itself rather than searching for the street. */
+  const MAP_COORDS = '24.7019569,46.6962026';
+  const MAP_LABEL = 'مكتب المحامية روان صالح الغامدي';
 
   function setupMapLink() {
     const link = $('#map-link');
@@ -498,7 +585,8 @@
     const isApple = /iPhone|iPad|iPod|Macintosh/.test(ua) ||
       (navigator.maxTouchPoints > 1 && /Mac/.test(ua));
     if (isApple) {
-      link.href = 'https://maps.apple.com/?q=' + encodeURIComponent(MAP_QUERY);
+      link.href = 'https://maps.apple.com/?ll=' + MAP_COORDS +
+        '&q=' + encodeURIComponent(MAP_LABEL);
     }
   }
 
@@ -525,6 +613,16 @@
       syncIdentityField();
       syncPhoneField();
       validateField($('#nationality'));
+    });
+
+    /* Overriding the code re-checks the number against the new country. The
+       label swap keeps the closed control readable; see collapseCodeLabel. */
+    $('#phone-cc').addEventListener('focus', expandCodeLabels);
+    $('#phone-cc').addEventListener('mousedown', expandCodeLabels);
+    $('#phone-cc').addEventListener('blur', collapseCodeLabel);
+    $('#phone-cc').addEventListener('change', () => {
+      collapseCodeLabel();
+      syncPhoneRule();
     });
 
     /* Validate on blur, and clear a live error as soon as it is fixed. */
@@ -610,6 +708,8 @@
       hideFormError();
       lastSubmission = null;
       buildCountryOptions();
+      $('#phone-cc').value = 'SA';
+      buildDialOptions();
       syncIdentityField();
       syncPhoneField();
       $('#confirm').classList.remove('is-open');

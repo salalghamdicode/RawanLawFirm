@@ -45,8 +45,10 @@ window.I18N = {
     'f.address.ph': 'المدينة، الحي، الشارع، الرمز البريدي',
     'f.phone': 'رقم الجوال',
     'f.phone.ph': '5X XXX XXXX',
+    'f.phone.ph.intl': 'XXX XXX XXX',
     'f.phone.hint': 'رقم جوال سعودي مكوّن من ٩ أرقام يبدأ بالرقم ٥',
-    'f.phone.hint.intl': 'أدخل رقم الجوال مع رمز الدولة',
+    'f.phone.hint.intl': 'اختر رمز الدولة ثم أدخل الرقم بدون الصفر في أوله',
+    'f.phone.cc.aria': 'رمز الدولة',
     'f.email': 'البريد الإلكتروني',
     'f.email.ph': 'name@example.com',
 
@@ -176,8 +178,10 @@ window.I18N = {
     'f.address.ph': 'City, district, street, postal code',
     'f.phone': 'Mobile number',
     'f.phone.ph': '5X XXX XXXX',
+    'f.phone.ph.intl': 'XXX XXX XXX',
     'f.phone.hint': 'Saudi mobile number — 9 digits beginning with 5',
-    'f.phone.hint.intl': 'Include your country code',
+    'f.phone.hint.intl': 'Pick your country code, then the number without its leading zero',
+    'f.phone.cc.aria': 'Country dialling code',
     'f.email': 'Email address',
     'f.email.ph': 'name@example.com',
 
