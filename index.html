@@ -100,7 +100,11 @@
         <div class="field">
           <label for="phone"><span data-i18n="f.phone">رقم الجوال</span><span class="req">*</span></label>
           <div class="affix">
-            <span class="tag" id="phone-cc">+966</span>
+            <!-- Options are injected by app.js: Saudi Arabia first, a divider,
+                 then every dialling code sorted by the active language. -->
+            <select class="tag tag--select" id="phone-cc" name="phoneCountry"
+                    autocomplete="tel-country-code" data-i18n-aria="f.phone.cc.aria"
+                    aria-label="رمز الدولة"></select>
             <input class="input input--ltr" id="phone" name="phone" type="tel" required
                    inputmode="tel" autocomplete="tel-national" data-i18n-ph="f.phone.ph"
                    placeholder="5X XXX XXXX" aria-describedby="phone-hint phone-err">
@@ -395,7 +399,7 @@
       <span>
         <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0z"/><circle cx="12" cy="10" r="3"/></svg>
         <a id="map-link"
-           href="https://www.google.com/maps/search/?api=1&amp;query=%D8%B7%D8%B1%D9%8A%D9%82%20%D8%A7%D9%84%D8%A7%D9%85%D9%8A%D8%B1%20%D9%85%D8%AD%D9%85%D8%AF%20%D8%A8%D9%86%20%D8%B9%D8%A8%D8%AF%D8%A7%D9%84%D8%B9%D8%B2%D9%8A%D8%B2%D8%8C%20%D8%A7%D9%84%D8%B9%D9%84%D9%8A%D8%A7%D8%8C%20%D8%A7%D9%84%D8%B1%D9%8A%D8%A7%D8%B6%D8%8C%20%D8%A7%D9%84%D8%B3%D8%B9%D9%88%D8%AF%D9%8A%D8%A9"
+           href="https://www.google.com/maps/search/?api=1&amp;query=24.7019569%2C46.6962026"
            target="_blank" rel="noopener noreferrer"
            data-i18n="ft.address">السعودية، الرياض، طريق الامير محمد بن عبدالعزيز، العليا</a>
       </span>
