@@ -571,32 +571,11 @@
   /* ======================================================================
      Wiring
      ====================================================================== */
-  /* The footer address ships with a Google Maps href so it works without JS.
-     On Apple platforms, point it at Apple Maps instead — that URL opens the
-     native Maps app on iOS/macOS and a web map everywhere else. Both drop the
-     pin on the office itself rather than searching for the street. */
-  const MAP_COORDS = '24.7019569,46.6962026';
-  const MAP_LABEL = 'مكتب المحامية روان صالح الغامدي';
-
-  function setupMapLink() {
-    const link = $('#map-link');
-    if (!link) return;
-    const ua = navigator.userAgent || '';
-    const isApple = /iPhone|iPad|iPod|Macintosh/.test(ua) ||
-      (navigator.maxTouchPoints > 1 && /Mac/.test(ua));
-    if (isApple) {
-      link.href = 'https://maps.apple.com/?ll=' + MAP_COORDS +
-        '&q=' + encodeURIComponent(MAP_LABEL);
-    }
-  }
-
   function init() {
     /* Language: stored choice wins, otherwise Arabic. */
     let stored = null;
     try { stored = localStorage.getItem(LANG_KEY); } catch (_) {}
     applyLanguage(stored === 'en' ? 'en' : 'ar');
-
-    setupMapLink();
 
     /* An email copy link takes over the page entirely — the recipient is the
        firm collecting a PDF, not a client filling anything in. */
