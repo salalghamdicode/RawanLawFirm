@@ -1,0 +1,81 @@
+/* ==========================================================================
+   Design tokens — Rawan Saleh A. Alghamdi Law Firm
+   Palette sampled directly from the brand assets in /assets.
+   ========================================================================== */
+
+:root {
+  /* --- Brand ------------------------------------------------------------ */
+  --navy:        #292759;  /* logo mark background */
+  --navy-deep:   #261C63;  /* calligraphy strokes */
+  --navy-soft:   #3D3A72;  /* hover / lifted navy */
+  --navy-tint:   #F0EFF6;  /* faint navy wash for panels */
+
+  --gold:        #B99E47;  /* wordmark rule, accents */
+  --gold-warm:   #B59D55;  /* Eid banner calligraphy */
+  --gold-light:  #D8C48A;  /* on-navy gold, meets contrast on dark */
+  --gold-tint:   #FBF7EC;  /* faint gold wash */
+
+  /* --- Surfaces --------------------------------------------------------- */
+  --bg:          #F4F4F4;  /* brochure ground */
+  --bg-alt:      #FFFFFF;
+  --surface:     #FFFFFF;
+  --border:      #DEDEE4;
+  --border-soft: #ECECF1;
+
+  /* --- Text -------------------------------------------------------------
+     Gold on white is ~2.6:1, below WCAG AA. It is reserved for rules,
+     borders, icons and large display type — never small body copy.
+     Navy on white is ~12:1.                                              */
+  --ink:         #292759;
+  --ink-muted:   #5F5D80;
+  --ink-faint:   #86849F;
+  --ink-invert:  #FFFFFF;
+
+  /* --- Status ----------------------------------------------------------- */
+  --error:       #A32133;
+  --error-bg:    #FDF2F3;
+  --success:     #1F7A54;
+  --success-bg:  #F0F9F5;
+
+  /* --- Type ------------------------------------------------------------- */
+  --font-ar:      'Tajawal', 'Almarai', system-ui, sans-serif;
+  --font-latin:   'Inter', system-ui, -apple-system, sans-serif;
+  --font-display: 'Cormorant Garamond', Georgia, serif;
+
+  --fs-xs:   0.78rem;
+  --fs-sm:   0.875rem;
+  --fs-base: 1rem;
+  --fs-md:   1.0625rem;
+  --fs-lg:   1.25rem;
+  --fs-xl:   1.5rem;
+  --fs-2xl:  2rem;
+  --fs-3xl:  2.5rem;
+
+  --lh-tight: 1.25;
+  --lh-base:  1.65;
+
+  /* --- Space ------------------------------------------------------------ */
+  --sp-1: 0.25rem;
+  --sp-2: 0.5rem;
+  --sp-3: 0.75rem;
+  --sp-4: 1rem;
+  --sp-5: 1.5rem;
+  --sp-6: 2rem;
+  --sp-7: 3rem;
+  --sp-8: 4rem;
+
+  /* --- Shape ------------------------------------------------------------ */
+  --r-sm: 4px;
+  --r-md: 6px;
+  --r-lg: 10px;
+
+  --shadow-card: 0 1px 2px rgba(41, 39, 89, 0.04),
+                 0 8px 28px rgba(41, 39, 89, 0.07);
+  --shadow-lift: 0 4px 12px rgba(41, 39, 89, 0.12);
+  --ring:        0 0 0 3px rgba(185, 158, 71, 0.28);
+  --ring-error:  0 0 0 3px rgba(163, 33, 51, 0.18);
+
+  --measure: 68rem;   /* page container */
+  --t-fast:  120ms ease;
+  --t-base:  200ms ease;
+}
