@@ -1,0 +1,178 @@
+/* ==========================================================================
+   Claim-intake form — the components the KYC page does not already have.
+   Everything else (header, card, sections, fields, buttons, confirmation,
+   footer) comes from css/main.css unchanged.
+
+   Written with CSS logical properties throughout, so Arabic (RTL) and
+   English (LTR) share one stylesheet, matching css/main.css.
+   ========================================================================== */
+
+/* --- Documents block ------------------------------------------------------
+   The two halves stack on a phone and sit side by side once there is room.
+   They are deliberately equal-width: neither writing nor attaching is the
+   primary path — either alone satisfies the field.                          */
+.doc-parts {
+  display: grid;
+  gap: var(--sp-5);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin-block-start: var(--sp-3);
+}
+@media (max-width: 46rem) {
+  .doc-parts { grid-template-columns: minmax(0, 1fr); }
+}
+
+/* Matches .field > label, which cannot be used here: this labels a control
+   group rather than a single input, so it must not be a <label>. */
+.doc-label {
+  font-size: var(--fs-sm);
+  font-weight: 500;
+  color: var(--ink);
+}
+
+/* The written and attached halves are alternatives to one another, so they
+   are given the same height rather than each sizing to its own content. */
+.doc-parts > .field > .textarea,
+.doc-parts > .field > .dropzone { flex: 1; }
+
+.textarea--tall { min-block-size: 8rem; }
+
+/* --- Dropzone -------------------------------------------------------------
+   A real <button>, so it is focusable and operable from the keyboard for
+   free; the file input behind it is driven by click(). Drag-and-drop is an
+   enhancement layered on top, never the only way in.                        */
+.dropzone {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sp-2);
+  inline-size: 100%;
+  min-block-size: 8rem;
+  padding: var(--sp-5) var(--sp-4);
+  text-align: center;
+  border: 1.5px dashed var(--border);
+  border-radius: var(--r-md);
+  background: var(--bg-alt);
+  color: var(--ink-muted);
+  cursor: pointer;
+  transition: border-color var(--t-fast), background var(--t-fast), color var(--t-fast);
+}
+/* Same hover treatment as .choice in main.css, so the two read as one family. */
+.dropzone:hover { border-color: var(--gold); background: var(--gold-tint); }
+.dropzone.is-dragover {
+  border-color: var(--gold);
+  background: var(--gold-tint);
+  color: var(--ink);
+}
+
+.dropzone .dz-icon {
+  inline-size: 1.6rem;
+  block-size: 1.6rem;
+  stroke: var(--gold);
+  flex: none;
+}
+.dropzone .dz-text { font-size: var(--fs-sm); font-weight: 500; color: var(--ink); }
+.dropzone .dz-types { font-size: var(--fs-xs); color: var(--ink-faint); }
+
+/* The dragged pointer can land on a child, which would fire dragleave on the
+   parent and flicker the highlight off. Children are made transparent to
+   pointer events so every drag event resolves to the dropzone itself. */
+.dropzone > * { pointer-events: none; }
+
+/* --- Attached files -------------------------------------------------------
+   Sizes are numerals and read left-to-right in both languages, the same
+   reasoning as .input--ltr in main.css.                                     */
+.file-total {
+  font-size: var(--fs-xs);
+  color: var(--ink-faint);
+  margin-block-start: var(--sp-2);
+}
+.file-total:empty { display: none; }
+
+.file-list {
+  list-style: none;
+  padding: 0;
+  margin-block-start: var(--sp-2);
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+}
+.file-list:empty { display: none; }
+
+.file-list li {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  padding: .5rem .7rem;
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  background: var(--navy-tint);
+  font-size: var(--fs-sm);
+}
+.file-list .f-icon {
+  inline-size: 1rem;
+  block-size: 1rem;
+  stroke: var(--ink-muted);
+  flex: none;
+}
+.file-list .f-name {
+  flex: 1;
+  min-inline-size: 0;
+  word-break: break-word;
+  color: var(--ink);
+}
+.file-list .f-size {
+  flex: none;
+  color: var(--ink-faint);
+  font-size: var(--fs-xs);
+  direction: ltr;
+  unicode-bidi: isolate;
+  font-variant-numeric: tabular-nums;
+}
+.file-list .f-remove {
+  flex: none;
+  display: grid;
+  place-items: center;
+  inline-size: 1.5rem;
+  block-size: 1.5rem;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--ink-faint);
+  cursor: pointer;
+  transition: background var(--t-fast), color var(--t-fast);
+}
+.file-list .f-remove:hover { background: var(--error-bg); color: var(--error); }
+.file-list .f-remove svg { inline-size: .85rem; block-size: .85rem; }
+
+/* --- Validation -----------------------------------------------------------
+   .q-block carries the error for the documents group, exactly as #q-income
+   and #q-work do on the KYC page. main.css only reddens controls under
+   .field.is-invalid, so the dropzone needs its own rule.                    */
+.q-block.is-invalid .dropzone,
+.q-block.is-invalid .textarea { border-color: var(--error); }
+.q-block.is-invalid .textarea:focus { box-shadow: var(--ring-error); }
+
+/* --- Print ----------------------------------------------------------------
+   Free text is entered across several lines and must print that way; the
+   .p-row rules in print.css otherwise collapse it to a single run.          */
+@media print {
+  .p-row .v.pre {
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+
+  .p-docs {
+    margin: 0;
+    padding-inline-start: 4mm;
+    list-style: disc;
+  }
+  .p-docs li { padding-block: .4mm; break-inside: avoid; }
+  .p-docs .f-size {
+    color: #5F5D80;
+    font-size: 8.5pt;
+    direction: ltr;
+    unicode-bidi: isolate;
+  }
+}
