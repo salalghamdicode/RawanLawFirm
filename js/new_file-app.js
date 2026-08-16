@@ -1,5 +1,5 @@
 /* ==========================================================================
-   Claim-intake form: language switching, attachments, validation,
+   File-opening form: language switching, attachments, validation,
    submission and the printable applicant copy.
 
    Structured to mirror js/app.js so the two forms read the same way. The
@@ -295,6 +295,11 @@
 
     email: v => (!v.trim() ? 'e.required' : !V.email(v) ? 'e.email' : null),
 
+    /* Only required once "أخرى" is chosen — the input is hidden otherwise. */
+    requestTypeOther: v =>
+      ($('#requestTypeOther-wrap').classList.contains('is-open') && !v.trim())
+        ? 'e.reqtype.other' : null,
+
     /* A one-word answer is not a description the firm can act on. */
     caseSubject: v => (!v.trim() ? 'e.required' : v.trim().length < 20 ? 'e.case.short' : null),
 
@@ -359,6 +364,13 @@
     return setFieldError(container, errEl, key);
   }
 
+  /* Radio groups carry their message on the group, not on a field — the same
+     shape the KYC form uses for #q-work. */
+  function validateRequestType() {
+    const chosen = $$('input[name="requestType"]').some(i => i.checked);
+    return setFieldError($('#q-reqtype'), $('#requestType-err'), chosen ? null : 'e.reqtype');
+  }
+
   /* المستندات may be written, attached, or both — so neither half is required
      on its own, but the block as a whole is. The message therefore lands on
      the block, the same shape the KYC form uses for its checkbox groups. */
@@ -375,7 +387,14 @@
       if (el && !validateField(el)) failures.push(el);
     });
 
+    if (!validateRequestType()) failures.push($('#q-reqtype input'));
     if (!validateDocuments()) failures.push($('#documentsText'));
+
+    /* Reported and focused in the order they appear on the page, not in the
+       order they happen to be checked — otherwise "jumped to the first one"
+       would send the applicant to a later section than the first fault. */
+    failures.sort((a, b) =>
+      (a.compareDocumentPosition(b) & Node.DOCUMENT_POSITION_FOLLOWING) ? -1 : 1);
 
     return failures;
   }
@@ -384,6 +403,15 @@
      Data collection
      ====================================================================== */
   function collect() {
+    /* Stored as the label rather than the value: the email, the PDF and the
+       applicant-copy link all show it verbatim, and none of them carries the
+       dictionary needed to turn a code back into words. */
+    const type = $('input[name="requestType"]:checked');
+    const typeLabel = !type ? ''
+      : type.value === 'other'
+        ? `${t('q.reqtype.other')}: ${$('#requestTypeOther').value.trim()}`
+        : t('q.reqtype.' + type.value);
+
     return {
       fullName: $('#fullName').value.trim(),
       idNumber: V.digitsOnly($('#idNumber').value),
@@ -393,6 +421,7 @@
         : V.toE164($('#phone').value, dialCode()),
       email: $('#email').value.trim(),
 
+      requestType: typeLabel,
       caseSubject: $('#caseSubject').value.trim(),
       requests: $('#requests').value.trim(),
 
@@ -455,6 +484,7 @@
       ])}
 
       ${section(t('sec.2'), [
+        row(t('q.reqtype'), data.requestType),
         row(t('f.case'), data.caseSubject, 'pre')
       ])}
 
@@ -625,6 +655,25 @@
       e.target.value = V.digitsOnly(e.target.value).slice(0, 10);
     });
 
+    /* --- Request type --------------------------------------------------- */
+    /* "أخرى" reveals its free-text input; the radios are exclusive, so any
+       other choice has to close it again and discard what was typed. */
+    $$('input[name="requestType"]').forEach(radio => {
+      radio.addEventListener('change', () => {
+        const wrap = $('#requestTypeOther-wrap');
+        const open = radio.value === 'other' && radio.checked;
+        wrap.classList.toggle('is-open', open);
+
+        if (open) {
+          $('#requestTypeOther').focus();
+        } else {
+          $('#requestTypeOther').value = '';
+          setFieldError(wrap.querySelector('.field'), $('#requestTypeOther-err'), null);
+        }
+        validateRequestType();
+      });
+    });
+
     /* --- Documents ----------------------------------------------------- */
     const input = $('#documentsFiles');
     const zone = $('#dropzone');
@@ -675,6 +724,7 @@
       $('#case-form').reset();
       $$('.is-invalid').forEach(el => el.classList.remove('is-invalid'));
       $$('.error-msg').forEach(el => { el.textContent = ''; delete el.dataset.errKey; });
+      $$('.reveal').forEach(el => el.classList.remove('is-open'));
       hideFormError();
       files = [];
       setFileError(null);
