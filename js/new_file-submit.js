@@ -1,5 +1,5 @@
 /* ==========================================================================
-   Submission adapter for the claim-intake form.
+   Submission adapter for the file-opening form.
 
    GitHub Pages serves static files only, so the form is delivered by a
    third-party form backend — the same arrangement as the KYC form. This page
@@ -88,11 +88,13 @@ window.CASE_SUBMIT = (function () {
      these opened on the KYC page — is rejected with the plain "unreadable
      link" message rather than rendering another form's fields in these slots. */
   const COPY_FORM = 'CASE';
-  const COPY_VERSION = 1;
+  /* 2: requestType added to the payload. Links issued under version 1 are
+     refused rather than read with every field shifted by one slot. */
+  const COPY_VERSION = 2;
 
   const COPY_FIELDS = [
     'fullName', 'idNumber', 'phone', 'email',
-    'caseSubject', 'requests', 'documentsText', 'fileNames'
+    'requestType', 'caseSubject', 'requests', 'documentsText', 'fileNames'
   ];
 
   /* base64url — btoa alone mangles Arabic, and '+' and '/' would not survive
@@ -182,8 +184,8 @@ window.CASE_SUBMIT = (function () {
       : link;
 
     const subject = lang === 'en'
-      ? `Claim Intake — ${reference} — ${data.fullName}`
-      : `نموذج قيد دعوى — ${reference} — ${data.fullName}`;
+      ? `File Opening — ${reference} — ${data.fullName}`
+      : `نموذج فتح ملف — ${reference} — ${data.fullName}`;
 
     const attached = (data.fileNames && data.fileNames.length)
       ? data.fileNames.join('\n')
@@ -200,8 +202,9 @@ window.CASE_SUBMIT = (function () {
       'رقم الجوال / Mobile':              data.phone,
       'البريد الإلكتروني / Email':        data.email,
 
-      '— موضوع الدعوى / Subject —':       '',
-      'وصف الدعوى / Description':         data.caseSubject,
+      '— موضوع الطلب / Subject —':        '',
+      'نوع الطلب / Request type':         data.requestType || '—',
+      'وصف الطلب / Description':          data.caseSubject,
 
       '— الطلبات / Requests —':           '',
       'الطلبات / Requests':               data.requests,
