@@ -1,5 +1,5 @@
 /* ==========================================================================
-   Bilingual copy for the claim-intake form.
+   Bilingual copy for the file-opening form.
    Every user-visible string lives here — nothing is hard-coded in
    new_file.html. Applied via [data-i18n] (text), [data-i18n-ph]
    (placeholder) and [data-i18n-aria] (aria-label).
@@ -13,8 +13,8 @@ window.I18N_CASE = {
   ar: {
     dir: 'rtl',
     /* --- Document ------------------------------------------------------- */
-    'meta.title': 'نموذج قيد دعوى | روان صالح عبدالله الغامدي',
-    'meta.desc': 'نموذج قيد دعوى إلكتروني لمكتب روان صالح عبدالله الغامدي للمحاماة والاستشارات القانونية والتوثيق.',
+    'meta.title': 'نموذج فتح ملف | روان صالح عبدالله الغامدي',
+    'meta.desc': 'نموذج فتح ملف إلكتروني لمكتب روان صالح عبدالله الغامدي للمحاماة والاستشارات القانونية والتوثيق.',
 
     /* --- Header --------------------------------------------------------- */
     'brand.alt': 'روان صالح عبدالله الغامدي — محاماة واستشارات قانونية وتوثيق',
@@ -26,12 +26,12 @@ window.I18N_CASE = {
     'lang.en': 'English',
 
     /* --- Intro ---------------------------------------------------------- */
-    'intro.title': 'نموذج قيد دعوى',
-    'intro.body': 'نرجو تعبئة البيانات التالية بدقة، حيث تُستخدم لدراسة الدعوى وإعداد لائحتها. جميع الحقول المعلَّمة بعلامة (*) إلزامية.',
+    'intro.title': 'نموذج فتح ملف',
+    'intro.body': 'يرجى تعبئة البيانات التالية بدقة، حيث تُستخدم المعلومات والبيانات المقدمة لغرض فتح ملف للعميل لدى المكتب، ودراسة الموضوع وتقييمه قانونيًا، وإعداد ومتابعة الخدمات القانونية ذات الصلة. جميع الحقول المعلَّمة بعلامة (*) إلزامية.',
 
     /* --- Sections ------------------------------------------------------- */
     'sec.1': 'بيانات مقدم الطلب',
-    'sec.2': 'موضوع الدعوى',
+    'sec.2': 'موضوع الطلب',
     'sec.3': 'الطلبات',
     'sec.4': 'المستندات',
 
@@ -49,9 +49,23 @@ window.I18N_CASE = {
     'f.email': 'البريد الإلكتروني',
     'f.email.ph': 'name@example.com',
 
+    /* --- Request ---------------------------------------------------------- */
+    'q.reqtype': 'نوع الطلب',
+    'q.reqtype.litigation': 'دعوى قضائية',
+    'q.reqtype.consultation': 'استشارة قانونية',
+    'q.reqtype.drafting': 'صياغة ومراجعة قانونية (عقود، اتفاقيات، خطابات، مذكرات وغيرها)',
+    'q.reqtype.demand': 'مطالبة قانونية',
+    'q.reqtype.negotiation': 'تفاوض وتسوية',
+    'q.reqtype.enforcement': 'تنفيذ',
+    'q.reqtype.corporate': 'خدمات الشركات',
+    'q.reqtype.ip': 'ملكية فكرية',
+    'q.reqtype.notary': 'توثيق',
+    'q.reqtype.other': 'أخرى',
+    'q.reqtype.other.ph': 'يرجى تحديد نوع الطلب',
+
     /* --- Case ----------------------------------------------------------- */
-    'f.case': 'وصف مبسط لموضوع الدعوى',
-    'f.case.ph': 'اشرح موضوع الدعوى بإيجاز: أطرافها، وما وقع من وقائع، وتاريخ حدوثها',
+    'f.case': 'وصف مبسط لموضوع الطلب',
+    'f.case.ph': 'اشرح موضوع طلبك بإيجاز، مع ذكر أهم الوقائع',
     'f.case.hint': 'يكفي وصف موجز وواضح — سيتواصل المكتب معك لاستكمال التفاصيل',
 
     /* --- Requests ------------------------------------------------------- */
@@ -84,7 +98,9 @@ window.I18N_CASE = {
     'e.phone': 'رقم جوال غير صحيح — يجب أن يبدأ بالرقم ٥ ويتكوّن من ٩ أرقام',
     'e.phone.intl': 'رقم جوال غير صحيح',
     'e.email': 'البريد الإلكتروني غير صحيح',
-    'e.case.short': 'يرجى إعطاء وصف أوضح لموضوع الدعوى',
+    'e.reqtype': 'يرجى اختيار نوع الطلب',
+    'e.reqtype.other': 'يرجى تحديد نوع الطلب',
+    'e.case.short': 'يرجى إعطاء وصف أوضح لموضوع الطلب',
     'e.docs': 'يرجى وصف المستندات كتابةً أو إرفاقها',
     'e.file.type': 'نوع الملف «{name}» غير مقبول. الأنواع المقبولة: PDF، JPG، PNG، DOC',
     'e.file.size': 'تجاوز الحجم الإجمالي المسموح ({max}). لم تتم إضافة «{name}».',
@@ -104,7 +120,7 @@ window.I18N_CASE = {
     'copy.error': 'تعذّرت قراءة هذا الرابط. قد يكون قد اقتُطع عند نسخه من البريد الإلكتروني — يُرجى فتحه مباشرة من الرسالة الأصلية.',
 
     /* --- Print ---------------------------------------------------------- */
-    'p.title': 'نموذج قيد دعوى',
+    'p.title': 'نموذج فتح ملف',
     'p.date': 'تاريخ التعبئة',
     'p.ref': 'الرقم المرجعي',
     'p.attached': 'الملفات المرفقة',
@@ -114,15 +130,15 @@ window.I18N_CASE = {
     'ft.phone': '+966 548 548 270',
     'ft.email': 'rawan@rsalawfirm.co',
     'ft.address': 'السعودية، الرياض، طريق الامير محمد بن عبدالعزيز، العليا',
-    'ft.license': 'ترخيص المحاماة رقم 113/41 — أعمال وخدمات التوثيق / ترخيص وزارة العدل رقم 1913/41',
+    'ft.license': 'ترخيص المحاماة رقم 41/113 — أعمال وخدمات التوثيق / ترخيص وزارة العدل رقم 41/1913',
     'ft.rights': 'جميع الحقوق محفوظة © {year} مكتب روان صالح عبدالله الغامدي للمحاماة'
   },
 
   en: {
     dir: 'ltr',
     /* --- Document ------------------------------------------------------- */
-    'meta.title': 'Claim Intake Form | Rawan Saleh A. Alghamdi',
-    'meta.desc': 'Online claim intake form for Rawan Saleh A. Alghamdi Law Firm, Legal Advisory & Notary.',
+    'meta.title': 'File Opening Form | Rawan Saleh A. Alghamdi',
+    'meta.desc': 'Online file opening form for Rawan Saleh A. Alghamdi Law Firm, Legal Advisory & Notary.',
 
     /* --- Header --------------------------------------------------------- */
     'brand.alt': 'Rawan Saleh A. Alghamdi — Law Firm, Legal Advisory & Notary',
@@ -134,12 +150,12 @@ window.I18N_CASE = {
     'lang.en': 'English',
 
     /* --- Intro ---------------------------------------------------------- */
-    'intro.title': 'Claim Intake Form',
-    'intro.body': 'Please complete the following information accurately. It is used to review your claim and prepare its statement. Fields marked with an asterisk (*) are required.',
+    'intro.title': 'File Opening Form',
+    'intro.body': 'Please complete the following information accurately. The information and data provided are used to open a client file with the firm, to study the matter and assess it legally, and to prepare and follow up on the related legal services. Fields marked with an asterisk (*) are required.',
 
     /* --- Sections ------------------------------------------------------- */
     'sec.1': 'Applicant Details',
-    'sec.2': 'Subject of the Claim',
+    'sec.2': 'Subject of the Request',
     'sec.3': 'Requests',
     'sec.4': 'Documents',
 
@@ -157,9 +173,23 @@ window.I18N_CASE = {
     'f.email': 'Email address',
     'f.email.ph': 'name@example.com',
 
+    /* --- Request ---------------------------------------------------------- */
+    'q.reqtype': 'Type of request',
+    'q.reqtype.litigation': 'Court claim (litigation)',
+    'q.reqtype.consultation': 'Legal consultation',
+    'q.reqtype.drafting': 'Legal drafting and review (contracts, agreements, letters, memoranda and the like)',
+    'q.reqtype.demand': 'Legal demand',
+    'q.reqtype.negotiation': 'Negotiation and settlement',
+    'q.reqtype.enforcement': 'Enforcement',
+    'q.reqtype.corporate': 'Corporate services',
+    'q.reqtype.ip': 'Intellectual property',
+    'q.reqtype.notary': 'Notarisation',
+    'q.reqtype.other': 'Other',
+    'q.reqtype.other.ph': 'Please specify the type of request',
+
     /* --- Case ----------------------------------------------------------- */
-    'f.case': 'Brief description of the claim',
-    'f.case.ph': 'Briefly explain the claim: who is involved, what happened, and when',
+    'f.case': 'Brief description of the request',
+    'f.case.ph': 'Briefly explain your request, noting the most important facts',
     'f.case.hint': 'A short, clear summary is enough — the firm will contact you for the details',
 
     /* --- Requests ------------------------------------------------------- */
@@ -192,7 +222,9 @@ window.I18N_CASE = {
     'e.phone': 'Invalid mobile number — 9 digits beginning with 5',
     'e.phone.intl': 'Invalid mobile number',
     'e.email': 'Please enter a valid email address',
-    'e.case.short': 'Please give a clearer description of the claim',
+    'e.reqtype': 'Please select the type of request',
+    'e.reqtype.other': 'Please specify the type of request',
+    'e.case.short': 'Please give a clearer description of the request',
     'e.docs': 'Please describe the documents in writing or attach them',
     'e.file.type': '“{name}” is not an accepted file type. Accepted: PDF, JPG, PNG, DOC',
     'e.file.size': 'That exceeds the total size allowed ({max}). “{name}” was not added.',
@@ -212,7 +244,7 @@ window.I18N_CASE = {
     'copy.error': 'This link could not be read. It may have been truncated when copied out of the email — please open it directly from the original message.',
 
     /* --- Print ---------------------------------------------------------- */
-    'p.title': 'Claim Intake Form',
+    'p.title': 'File Opening Form',
     'p.date': 'Date submitted',
     'p.ref': 'Reference',
     'p.attached': 'Attached files',
@@ -222,7 +254,7 @@ window.I18N_CASE = {
     'ft.phone': '+966 548 548 270',
     'ft.email': 'rawan@rsalawfirm.co',
     'ft.address': 'Al Olaya, Prince Mohammed bin Abdulaziz Road, Riyadh, Saudi Arabia',
-    'ft.license': 'Lawyer License No. 113/41 — Notary Public Services / M.O.J. License No. 1913/41',
+    'ft.license': 'Lawyer License No. 41/113 — Notary Public Services / M.O.J. License No. 41/1913',
     'ft.rights': '© {year} Rawan Saleh A. Alghamdi Law Firm. All rights reserved.'
   }
 };
